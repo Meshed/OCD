@@ -7,12 +7,13 @@ public class GridManager : MonoBehaviour {
 	public GameObject BlueDot = null;
 	public GameObject GreenDot = null;
 	public GameObject RedDot = null;
+	public GameObject DotHightlight = null;
 	public int MaxDotsPerColor = 1;
+	public GameObject selectedDot = null;
 
 	private int blueDotSpawnCount = 0;
 	private int greenDotSpawnCount = 0;
 	private int redDotSpawnCount = 0;
-	public GameObject selectedDot = null;
 
 	// Use this for initialization
 	void Start () {
@@ -104,10 +105,14 @@ public class GridManager : MonoBehaviour {
 			selectedDotStateController.GridNode = newDotStateController.GridNode;
 			newDotStateController.GridNode = tempGridNode;
 			selectedDot = null;
+			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
 		}
 		else
 		{
 			selectedDot = newSelectedDot;
+
+			GameObject dotHightlight = (GameObject)Instantiate(DotHightlight);
+			dotHightlight.transform.position = selectedDot.transform.position;
 		}
 	}
 }
