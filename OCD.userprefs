@@ -1,12 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/DotStateController.cs">
-    <Files>
-      <File FileName="Assets/Scripts/GridManager.cs" Line="63" Column="1" />
-      <File FileName="Assets/Scripts/DotStateController.cs" Line="25" Column="2" />
-      <File FileName="../Desktop/Unity 2D Game Development/Code/2564_Code_140221_updated/Assets/Scripts/PlayerStateListener.cs" Line="42" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

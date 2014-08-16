@@ -12,6 +12,7 @@ public class DotStateController : MonoBehaviour {
 
 	public DotStates currentState = DotStates.Idle;
 	public GameObject GridNode = null;
+	public GridManager GridManager = null;
 
 	void OnMouseDown()
 	{
@@ -49,6 +50,8 @@ public class DotStateController : MonoBehaviour {
 				break;
 			case DotStates.Selected:
 				break;
+			case DotStates.Locked:
+				break;
 		}
 	}
 
@@ -62,8 +65,13 @@ public class DotStateController : MonoBehaviour {
 			case DotStateController.DotStates.Idle:
 				break;
 			case DotStateController.DotStates.Selected:
+				GridManager.DotSelected(gameObject);
+			break;
+			case DotStates.Moving:
 				break;
-			}
+			case DotStates.Locked:
+				break;
+		}
 		
 		currentState = newState;
 	}

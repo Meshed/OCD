@@ -12,6 +12,7 @@ public class GridManager : MonoBehaviour {
 	private int blueDotSpawnCount = 0;
 	private int greenDotSpawnCount = 0;
 	private int redDotSpawnCount = 0;
+	public GameObject selectedDot = null;
 
 	// Use this for initialization
 	void Start () {
@@ -33,6 +34,7 @@ public class GridManager : MonoBehaviour {
 						DotStateController dotStateController = blueDot.GetComponent<DotStateController>();
 
 						dotStateController.GridNode = GridNodes[i];
+						dotStateController.GridManager = this;
 						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
 						
 						blueDotSpawnCount++;
@@ -46,6 +48,7 @@ public class GridManager : MonoBehaviour {
 						DotStateController dotStateController = greenDot.GetComponent<DotStateController>();
 
 						dotStateController.GridNode = GridNodes[i];
+						dotStateController.GridManager = this;
 						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
 						
 						greenDotSpawnCount++;
@@ -59,6 +62,7 @@ public class GridManager : MonoBehaviour {
 						DotStateController dotStateController = redDot.GetComponent<DotStateController>();
 
 						dotStateController.GridNode = GridNodes[i];
+						dotStateController.GridManager = this;
 						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
 
 						redDotSpawnCount++;
@@ -71,7 +75,39 @@ public class GridManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		if(selectedDot == null)
+		{
+			var dots = GameObject.FindGameObjectsWithTag("Dot");
+
+			foreach(var dot in dots)
+			{
+				DotStateController dotStateController = dot.GetComponent<DotStateController>();
+
+				if(dotStateController)
+				{
+					dotStateController.OnStateChange(DotStateController.DotStates.Idle);
+				}
+			}
+		}
+	}
+
+	public void DotSelected(GameObject newSelectedDot)
+	{
+		if(selectedDot)
+		{
+			DotStateController selectedDotStateController = selectedDot.GetComponent<DotStateController>();
+			DotStateController newDotStateController = newSelectedDot.GetComponent<DotStateController>();
+
+			GameObject tempGridNode = selectedDotStateController.GridNode;
+			selectedDotStateController.GridNode = newDotStateController.GridNode;
+			newDotStateController.GridNode = tempGridNode;
+			selectedDot = null;
+		}
+		else
+		{
+			selectedDot = newSelectedDot;
+		}
 	}
 }
