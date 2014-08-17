@@ -13,6 +13,7 @@ public class DotStateController : MonoBehaviour {
 	public DotStates currentState = DotStates.Idle;
 	public GameObject GridNode = null;
 	public GridManager GridManager = null;
+	public Vector2 GridLocation;
 
 	void OnMouseDown()
 	{
