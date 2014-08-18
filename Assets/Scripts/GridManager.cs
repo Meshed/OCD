@@ -46,6 +46,7 @@ public class GridManager : MonoBehaviour {
 						GameObject blueDot = (GameObject)Instantiate(BlueDot);
 						DotStateController dotStateController = blueDot.GetComponent<DotStateController>();
 
+						dotStateController.GridLocation = GetGridLocation(i);
 						dotStateController.GridNode = GridNodes[i];
 						dotStateController.GridManager = this;
 						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
@@ -60,6 +61,7 @@ public class GridManager : MonoBehaviour {
 						GameObject greenDot = (GameObject)Instantiate(GreenDot);
 						DotStateController dotStateController = greenDot.GetComponent<DotStateController>();
 
+						dotStateController.GridLocation = GetGridLocation(i);
 						dotStateController.GridNode = GridNodes[i];
 						dotStateController.GridManager = this;
 						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
@@ -74,6 +76,7 @@ public class GridManager : MonoBehaviour {
 						GameObject redDot = (GameObject)Instantiate(RedDot);
 						DotStateController dotStateController = redDot.GetComponent<DotStateController>();
 
+						dotStateController.GridLocation = GetGridLocation(i);
 						dotStateController.GridNode = GridNodes[i];
 						dotStateController.GridManager = this;
 						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
@@ -106,7 +109,7 @@ public class GridManager : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	/// <summary>
 	/// Handles when a dot has been selected and handles the validation
 	/// </summary>
@@ -115,12 +118,20 @@ public class GridManager : MonoBehaviour {
 	{
 		if(SelectedDot)
 		{
-			DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
-			DotStateController newDotStateController = GetDotStateController(newSelectedDot);
+			if(IsDotSelectionAllowed(newSelectedDot))
+			{
+				DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
+				DotStateController newDotStateController = GetDotStateController(newSelectedDot);
+				
+				GameObject tempGridNode = selectedDotStateController.GridNode;
+				selectedDotStateController.GridNode = newDotStateController.GridNode;
+				newDotStateController.GridNode = tempGridNode;
 
-			GameObject tempGridNode = selectedDotStateController.GridNode;
-			selectedDotStateController.GridNode = newDotStateController.GridNode;
-			newDotStateController.GridNode = tempGridNode;
+				Vector2 tempGridLocation = selectedDotStateController.GridLocation;
+				selectedDotStateController.GridLocation = newDotStateController.GridLocation;
+				newDotStateController.GridLocation = tempGridLocation;
+			}
+
 			SelectedDot = null;
 			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
 		}
@@ -132,6 +143,29 @@ public class GridManager : MonoBehaviour {
 			dotHightlight.transform.position = SelectedDot.transform.position;
 		}
 	
+	}
+
+	/// <summary>
+	/// Sets the x and y location for the node the ball will spawn at
+	/// </summary>
+	/// <returns>The grid location: Vector2</returns>
+	/// <param name="gridNode">Grid node.</param>
+	private Vector2 GetGridLocation(int gridNode)
+	{
+		Vector2 gridLocation;
+		
+		if(gridNode < 3)
+		{
+			gridLocation.x = gridNode + 1;
+			gridLocation.y = 1;
+		}
+		else
+		{
+			gridLocation.x = (gridNode + 1) - 3;
+			gridLocation.y = 2;
+		}
+		
+		return gridLocation;
 	}
 
 	/// <summary>
@@ -166,7 +200,7 @@ public class GridManager : MonoBehaviour {
 		bool isSelectionAllowed = false;
 
 		// TODO: Implement a strategy to support various levels of business rules, one for each difficulty
-		if(SelectedDot = null)
+		if(SelectedDot == null)
 			isSelectionAllowed = true;
 		else
 		{
@@ -175,11 +209,15 @@ public class GridManager : MonoBehaviour {
 			DotStateController newDotStateController = GetDotStateController(dot);
 			DotStateController currentDotStateController = GetDotStateController(SelectedDot);
 
+
 			isSelectionAllowed = IsNewDotOnTopOfOrBellowCurrentDot(newDotStateController.GridLocation, 
 			                                                       currentDotStateController.GridLocation);
 
-			isSelectionAllowed = IsNewDotToLeftOfOrRightOfCurrentDot(newDotStateController.GridLocation, 
-			                                                         currentDotStateController.GridLocation);
+			if(isSelectionAllowed == false)
+			{
+				isSelectionAllowed = IsNewDotToLeftOfOrRightOfCurrentDot(newDotStateController.GridLocation, 
+				                                                         currentDotStateController.GridLocation);
+			}
 		}
 
 		return isSelectionAllowed;
@@ -235,6 +273,13 @@ public class GridManager : MonoBehaviour {
 	/// <param name="dot">Game Object</param>
 	private DotStateController GetDotStateController(GameObject gameObject)
 	{
-		return gameObject.GetComponent<DotStateController>();
+		DotStateController dotStateController = null;
+
+		if(gameObject)
+		{
+			dotStateController = gameObject.GetComponent<DotStateController>();
+		}
+
+		return dotStateController;
 	}
 }
