@@ -182,19 +182,48 @@ public class GridManager : MonoBehaviour {
 	/// <param name="gridNode">Grid node.</param>
 	private Vector2 GetGridLocation(int gridNode)
 	{
-		Vector2 gridLocation;
+		Vector2 gridLocation = new Vector2()
+		{
+			x = 0, 
+			y = 0
+		};
 		
-		if(gridNode < 3)
+		if(gridNode < 5)
 		{
 			gridLocation.x = gridNode + 1;
 			gridLocation.y = 1;
 		}
-		else
+		else if(gridNode > 4 && gridNode < 10)
 		{
-			gridLocation.x = (gridNode + 1) - 3;
+			gridLocation.x = (gridNode + 1) - 5;
 			gridLocation.y = 2;
 		}
-		
+		else if(gridNode > 9 && gridNode < 15)
+		{
+			gridLocation.x = (gridNode + 1) - 10;
+			gridLocation.y = 3;
+		}
+		else if(gridNode > 14 && gridNode < 20)
+		{
+			gridLocation.x = (gridNode + 1) - 15;
+			gridLocation.y = 4;
+		}
+		else if(gridNode > 19 && gridNode < 25)
+		{
+			gridLocation.x = (gridNode + 1) - 20;
+			gridLocation.y = 5;
+		}
+		else if(gridNode > 24 && gridNode < 30)
+		{
+			gridLocation.x = (gridNode + 1) - 25;
+			gridLocation.y = 6;
+		}
+		else if(gridNode > 29 && gridNode < 35)
+		{
+			gridLocation.x = (gridNode + 1) - 30;
+			gridLocation.y = 7;
+		}
+
 		return gridLocation;
 	}
 	/// <summary>
