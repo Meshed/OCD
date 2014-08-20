@@ -8,6 +8,8 @@ public class GridManager : MonoBehaviour {
 	public GameObject BlueDot = null;
 	public GameObject GreenDot = null;
 	public GameObject RedDot = null;
+	public GameObject OrangeDot = null;
+	public GameObject PurpleDot = null;
 	public GameObject DotHightlight = null;
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
@@ -22,6 +24,8 @@ public class GridManager : MonoBehaviour {
 		Blue = 1,
 		Green,
 		Red,
+		Orange,
+		Purple,
 		_Length
 	}
 
