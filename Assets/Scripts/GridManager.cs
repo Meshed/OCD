@@ -8,13 +8,12 @@ public class GridManager : MonoBehaviour {
 	public GameObject BlueDot = null;
 	public GameObject GreenDot = null;
 	public GameObject RedDot = null;
+	public GameObject OrangeDot = null;
+	public GameObject PurpleDot = null;
 	public GameObject DotHightlight = null;
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
 
-	private int blueDotSpawnCount = 0;
-	private int greenDotSpawnCount = 0;
-	private int redDotSpawnCount = 0;
 
 	// This is the list of colors we have available for dots
 	private enum DotColor
@@ -22,14 +21,22 @@ public class GridManager : MonoBehaviour {
 		Blue = 1,
 		Green,
 		Red,
-		_Length
+		Orange,
+		Purple,
+		EnumLength
 	}
 
 	/// <summary>
 	/// This is where we setup the game board, create all of the dots, and assign them to nodes
 	/// </summary>
 	void Start () {
-		for(int i = 0; i < GridNodes.GetLength(0); i++)
+	    int blueDotSpawnCount = 0;
+	    int greenDotSpawnCount = 0;
+	    int redDotSpawnCount = 0;
+        int orangeDotSpawnCount = 0;
+        int purpleDotSpawnCount = 0;
+
+		for(int gridNodeIndex = 0; gridNodeIndex < GridNodes.GetLength(0); gridNodeIndex++)
 		{
 			bool dotCreated = false;
 
@@ -37,60 +44,76 @@ public class GridManager : MonoBehaviour {
 			{
 				DotColor randomDotColor = GetRandomDotColor();
 
-				switch(randomDotColor)
-				{
-				case DotColor.Blue:
-					// Create a new prefab and assign node i to it
-					if(blueDotSpawnCount < MaxDotsPerColor)
-					{
-						GameObject blueDot = (GameObject)Instantiate(BlueDot);
-						DotStateController dotStateController = blueDot.GetComponent<DotStateController>();
+			    switch (randomDotColor)
+			    {
+			        case DotColor.Blue:
+			            // Create a new prefab and assign node gridNodeIndex to it
+			            if (blueDotSpawnCount < MaxDotsPerColor)
+			            {
+			                var blueDot = (GameObject) Instantiate(BlueDot);
+			                DotStateController dotStateController = GetDotStateController(blueDot);
 
-						dotStateController.GridLocation = GetGridLocation(i);
-						dotStateController.GridNode = GridNodes[i];
-						dotStateController.GridManager = this;
-						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
-						
-						blueDotSpawnCount++;
-						dotCreated = true;
-					}
-					break;
-				case DotColor.Green:
-					if(greenDotSpawnCount < MaxDotsPerColor)
-					{
-						GameObject greenDot = (GameObject)Instantiate(GreenDot);
-						DotStateController dotStateController = greenDot.GetComponent<DotStateController>();
+			                SetupDotStateController(dotStateController, gridNodeIndex);
 
-						dotStateController.GridLocation = GetGridLocation(i);
-						dotStateController.GridNode = GridNodes[i];
-						dotStateController.GridManager = this;
-						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
-						
-						greenDotSpawnCount++;
-						dotCreated = true;
-					}
-					break;
-				case DotColor.Red:
-					if(redDotSpawnCount < MaxDotsPerColor)
-					{
-						GameObject redDot = (GameObject)Instantiate(RedDot);
-						DotStateController dotStateController = redDot.GetComponent<DotStateController>();
+			                blueDotSpawnCount++;
+			                dotCreated = true;
+			            }
+			            break;
+			        case DotColor.Green:
+			            if (greenDotSpawnCount < MaxDotsPerColor)
+			            {
+			                var greenDot = (GameObject) Instantiate(GreenDot);
+			                DotStateController dotStateController = GetDotStateController(greenDot);
 
-						dotStateController.GridLocation = GetGridLocation(i);
-						dotStateController.GridNode = GridNodes[i];
-						dotStateController.GridManager = this;
-						dotStateController.OnStateChange(DotStateController.DotStates.Idle);
+			                SetupDotStateController(dotStateController, gridNodeIndex);
 
-						redDotSpawnCount++;
-						dotCreated = true;
-					}
-					break;
-				}
+			                greenDotSpawnCount++;
+			                dotCreated = true;
+			            }
+			            break;
+			        case DotColor.Red:
+			            if (redDotSpawnCount < MaxDotsPerColor)
+			            {
+			                var redDot = (GameObject) Instantiate(RedDot);
+			                DotStateController dotStateController = GetDotStateController(redDot);
+
+			                SetupDotStateController(dotStateController, gridNodeIndex);
+
+			                redDotSpawnCount++;
+			                dotCreated = true;
+			            }
+			            break;
+			        case DotColor.Orange:
+			            if (orangeDotSpawnCount < MaxDotsPerColor)
+			            {
+			                var orangeDot = (GameObject) Instantiate(OrangeDot);
+			                DotStateController dotStateController = GetDotStateController(orangeDot);
+
+                            SetupDotStateController(dotStateController, gridNodeIndex);
+
+			                orangeDotSpawnCount++;
+			                dotCreated = true;
+			            }
+			            break;
+                    case DotColor.Purple:
+			            if (purpleDotSpawnCount < MaxDotsPerColor)
+			            {
+			                var purpleDot = (GameObject) Instantiate(PurpleDot);
+			                DotStateController dotStateController = GetDotStateController(purpleDot);
+
+                            SetupDotStateController(dotStateController, gridNodeIndex);
+
+			                purpleDotSpawnCount++;
+			                dotCreated = true;
+			            }
+                        break;
+			    }
 			}while(!dotCreated);
 		}
 	}
-	
-	// Update is called once per frame
+
+
+    // Update is called once per frame
 	void Update () 
 	{
 		// If no dot has been selected then we need to set the state for all of the Dots to Idle
@@ -145,36 +168,71 @@ public class GridManager : MonoBehaviour {
 	
 	}
 
-	/// <summary>
+    private void SetupDotStateController(DotStateController dotStateController, int gridNodeIndex)
+    {
+        dotStateController.GridLocation = GetGridLocation(gridNodeIndex);
+        dotStateController.GridNode = GridNodes[gridNodeIndex];
+        dotStateController.GridManager = this;
+        dotStateController.OnStateChange(DotStateController.DotStates.Idle);
+    }
+    /// <summary>
 	/// Sets the x and y location for the node the ball will spawn at
 	/// </summary>
 	/// <returns>The grid location: Vector2</returns>
 	/// <param name="gridNode">Grid node.</param>
 	private Vector2 GetGridLocation(int gridNode)
 	{
-		Vector2 gridLocation;
+		Vector2 gridLocation = new Vector2()
+		{
+			x = 0, 
+			y = 0
+		};
 		
-		if(gridNode < 3)
+		if(gridNode < 5)
 		{
 			gridLocation.x = gridNode + 1;
 			gridLocation.y = 1;
 		}
-		else
+		else if(gridNode > 4 && gridNode < 10)
 		{
-			gridLocation.x = (gridNode + 1) - 3;
+			gridLocation.x = (gridNode + 1) - 5;
 			gridLocation.y = 2;
 		}
-		
+		else if(gridNode > 9 && gridNode < 15)
+		{
+			gridLocation.x = (gridNode + 1) - 10;
+			gridLocation.y = 3;
+		}
+		else if(gridNode > 14 && gridNode < 20)
+		{
+			gridLocation.x = (gridNode + 1) - 15;
+			gridLocation.y = 4;
+		}
+		else if(gridNode > 19 && gridNode < 25)
+		{
+			gridLocation.x = (gridNode + 1) - 20;
+			gridLocation.y = 5;
+		}
+		else if(gridNode > 24 && gridNode < 30)
+		{
+			gridLocation.x = (gridNode + 1) - 25;
+			gridLocation.y = 6;
+		}
+		else if(gridNode > 29 && gridNode < 35)
+		{
+			gridLocation.x = (gridNode + 1) - 30;
+			gridLocation.y = 7;
+		}
+
 		return gridLocation;
 	}
-
 	/// <summary>
 	/// Gets the random color of the dot from the DotColor list
 	/// </summary>
 	/// <returns>The random dot color: DotColor</returns>
 	private DotColor GetRandomDotColor()
 	{
-		int dotColor = Random.Range(1, (int)DotColor._Length);
+		int dotColor = Random.Range(1, (int)DotColor.EnumLength);
 		
 		return (DotColor)dotColor;
 	}
@@ -182,7 +240,7 @@ public class GridManager : MonoBehaviour {
 	/// Gets all game objects with the tag of Dot
 	/// </summary>
 	/// <returns>Returns a List of GameObjects</returns>
-	private IList<GameObject> GetAllDots()
+	private IEnumerable<GameObject> GetAllDots()
 	{
 		return GameObject.FindGameObjectsWithTag("Dot");
 	}
@@ -266,18 +324,19 @@ public class GridManager : MonoBehaviour {
 		
 		return result;
 	}
-	/// <summary>
-	/// Gets the state controller component from the Game Object
-	/// </summary>
-	/// <returns>The dot state controller.</returns>
-	/// <param name="dot">Game Object</param>
-	private DotStateController GetDotStateController(GameObject gameObject)
+
+    /// <summary>
+    /// Gets the state controller component from the Game Object
+    /// </summary>
+    /// <returns>The dot state controller.</returns>
+    /// <param name="dotGameObject">Game Object</param>
+    private DotStateController GetDotStateController(GameObject dotGameObject)
 	{
 		DotStateController dotStateController = null;
 
-		if(gameObject)
+		if(dotGameObject)
 		{
-			dotStateController = gameObject.GetComponent<DotStateController>();
+			dotStateController = dotGameObject.GetComponent<DotStateController>();
 		}
 
 		return dotStateController;
