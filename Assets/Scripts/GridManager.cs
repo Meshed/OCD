@@ -14,6 +14,8 @@ public class GridManager : MonoBehaviour {
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
 
+	private int _score = 0;
+
 
 	// This is the list of colors we have available for dots
 	private enum DotColor
@@ -25,6 +27,12 @@ public class GridManager : MonoBehaviour {
 		Purple,
 		EnumLength
 	}
+
+	public delegate void ScoreHandler();
+	public static event ScoreHandler AddScore;
+	public static event ScoreHandler LowerScore;
+	public delegate void MoveHandler();
+	public static event MoveHandler AddMove;
 
 	/// <summary>
 	/// This is where we setup the game board, create all of the dots, and assign them to nodes
@@ -143,6 +151,8 @@ public class GridManager : MonoBehaviour {
 		{
 			if(IsDotSelectionAllowed(newSelectedDot))
 			{
+				AddMove();
+				LowerScore();
 				DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
 				DotStateController newDotStateController = GetDotStateController(newSelectedDot);
 				

@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\DotStateController.cs" />
      <Compile Include="Assets\Scripts\GridManager.cs" />
+     <Compile Include="Assets\Scripts\MoveWatcher.cs" />
+     <Compile Include="Assets\Scripts\ScoreWatcher.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
