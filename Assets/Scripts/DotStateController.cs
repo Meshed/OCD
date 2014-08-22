@@ -14,6 +14,7 @@ public class DotStateController : MonoBehaviour {
 	public GameObject GridNode = null;
 	public GridManager GridManager = null;
 	public Vector2 GridLocation;
+	public GridManager.DotColor DotColor;
 
 	void OnMouseDown()
 	{
