@@ -35,7 +35,7 @@ public class GameStateController : MonoBehaviour {
 
 	bool PlayerWon()
 	{
-		return false;
+		return GridManager.GameWon();
 	}
 
 	bool PlayerLost()
