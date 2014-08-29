@@ -4,6 +4,8 @@ using System.Collections;
 public class GameStateController : MonoBehaviour {
 	public GameState CurrentGameState;
 	public GridManager GridManager;
+	public GameObject GameWonContainer;
+	public GameObject HUDContainer;
 
 	public delegate void GameStateHandler(GameStateController.GameState newGameState);
 	public static event GameStateHandler OnStateChange;
@@ -20,32 +22,25 @@ public class GameStateController : MonoBehaviour {
 	public enum GameState
 	{
 		Playing,
-		Won,
-		Lost
+		GameOver,
+		Quit
 	}
 
 	// Use this for initialization
 	void Start () {
 		CurrentGameState = GameState.Playing;
 		GameObject menu = GameObject.Find("Menu");
+		GameWonContainer.SetActive(false);
+		HUDContainer.SetActive(false);
 
 		if(menu)
 		{
-			Debug.Log("Menu found");
 			MainMenuManager mainMenuManager = menu.GetComponent<MainMenuManager>();
 
 			if(mainMenuManager)
 			{
-				Debug.Log("Main Menu Manager found");
+				CurrentGameDifficulty = mainMenuManager.GameDifficulty;
 			}
-			else
-			{
-				Debug.Log("Main Menu Manager not found");
-			}
-		}
-		else
-		{
-			Debug.Log("Menu not found");
 		}
 
 		Destroy(menu);
@@ -56,11 +51,17 @@ public class GameStateController : MonoBehaviour {
 	{
 		if(PlayerWon())
 		{
-			OnStateChange(GameState.Won);
+			GameWonContainer.SetActive(true);
+			OnStateChange(GameState.GameOver);
 		}
 		else if(PlayerLost())
 		{
-			OnStateChange(GameState.Lost);
+			GameWonContainer.SetActive(true);
+			OnStateChange(GameState.GameOver);
+		}
+		else
+		{
+			HUDContainer.SetActive(true);
 		}
 	}
 

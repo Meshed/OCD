@@ -10,7 +10,6 @@ public class MainMenuManager : MonoBehaviour {
 
 	public void SetGameDifficulty(GameStateController.GameDifficulty gameDifficulty)
 	{
-		Debug.Log("Game difficulty set to: " + gameDifficulty);
 		GameDifficulty = gameDifficulty;
 	}
 }

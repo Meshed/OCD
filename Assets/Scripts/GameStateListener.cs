@@ -31,11 +31,11 @@ public class GameStateListener : MonoBehaviour {
 
 		switch(newGameState)
 		{
-			case GameStateController.GameState.Lost:
-				break;
 			case GameStateController.GameState.Playing:
 				break;
-			case GameStateController.GameState.Won:
+			case GameStateController.GameState.GameOver:
+				break;
+			case GameStateController.GameState.Quit:
 				break;
 		}
 
@@ -48,17 +48,17 @@ public class GameStateListener : MonoBehaviour {
 
 		switch(_currentGameState)
 		{
-			case GameStateController.GameState.Lost:
+			case GameStateController.GameState.GameOver:
 				if(newGameState == GameStateController.GameState.Playing)
 					stateChangeAllowed = true;
 				break;
 			case GameStateController.GameState.Playing:
-				if(newGameState == GameStateController.GameState.Lost ||
-			   		newGameState == GameStateController.GameState.Won)
+				if(newGameState == GameStateController.GameState.GameOver ||
+			   		newGameState == GameStateController.GameState.Quit)
 					stateChangeAllowed = true;
 				break;
-			case GameStateController.GameState.Won:
-				if(newGameState == GameStateController.GameState.Playing)
+			case GameStateController.GameState.Quit:
+				if(newGameState == GameStateController.GameState.GameOver)
 					stateChangeAllowed = true;
 				break;
 		}
