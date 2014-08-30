@@ -34,7 +34,7 @@ public class GridManager : MonoBehaviour {
 	public static event ScoreHandler LowerScore;
 	public delegate void MoveHandler();
 	public static event MoveHandler AddMove;
-
+	
 	/// <summary>
 	/// This is where we setup the game board, create all of the dots, and assign them to nodes
 	/// </summary>
@@ -189,15 +189,10 @@ public class GridManager : MonoBehaviour {
 		bool redDotsComplete = false;
 
 		blueDotsComplete = AllDotsForColorInOrder(DotColor.Blue);
-		if(blueDotsComplete) Debug.Log("Blue complete");
 		greenDotsComplete = AllDotsForColorInOrder(DotColor.Green);
-		if(greenDotsComplete) Debug.Log("Green coplete");
 		redDotsComplete = AllDotsForColorInOrder(DotColor.Red);
-		if(redDotsComplete) Debug.Log("Red complete");
 		orangeDotsComplete = AllDotsForColorInOrder(DotColor.Orange);
-		if(orangeDotsComplete) Debug.Log("Orange complete");
 		purpleDotsComplete = AllDotsForColorInOrder(DotColor.Purple);
-		if(purpleDotsComplete) Debug.Log("Purple complete");
 
 		if(blueDotsComplete &&
 		   greenDotsComplete &&
@@ -251,7 +246,6 @@ public class GridManager : MonoBehaviour {
 					// Make sure the color of the dot is the same color we are checking for
 					if(dotStateController.DotColor == dotColor)
 					{
-						Debug.Log("DotColor: " + dotStateController.DotColor + ", dotColor: " + dotColor);
 						allDotsInOrder = true;
 					}
 					else

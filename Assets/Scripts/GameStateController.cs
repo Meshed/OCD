@@ -42,8 +42,6 @@ public class GameStateController : MonoBehaviour {
 				CurrentGameDifficulty = mainMenuManager.GameDifficulty;
 			}
 		}
-
-		Destroy(menu);
 	}
 	
 	// Update is called once per frame
@@ -52,21 +50,22 @@ public class GameStateController : MonoBehaviour {
 		switch(CurrentGameState)
 		{
 			case GameState.Playing:
-			if(PlayerWon())
-			{
-				GameWonContainer.SetActive(true);
-				OnStateChange(GameState.GameOver);
-			}
-			else if(PlayerLost())
-			{
-				GameWonContainer.SetActive(true);
-				OnStateChange(GameState.GameOver);
-			}
-			else
-			{
-				HUDContainer.SetActive(true);
-			}
-			break;
+				if(PlayerWon())
+				{
+					GameWonContainer.SetActive(true);
+					CurrentGameState = GameState.GameOver;
+					OnStateChange(GameState.GameOver);
+				}
+				else if(PlayerLost())
+				{
+					GameWonContainer.SetActive(true);
+					OnStateChange(GameState.GameOver);
+				}
+				else
+				{
+					HUDContainer.SetActive(true);
+				}
+				break;
 			case GameState.GameOver:
 				break;
 			case GameState.Quit:

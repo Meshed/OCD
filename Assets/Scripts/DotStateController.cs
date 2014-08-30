@@ -15,9 +15,30 @@ public class DotStateController : MonoBehaviour {
 	public GridManager GridManager = null;
 	public Vector2 GridLocation;
 	public GridManager.DotColor DotColor;
+	public GameStateController.GameState CurrentGameState;
+
+	void OnEnable()
+	{
+		GameStateController.OnStateChange += OnGameStateChanged;
+	}
+
+	void OnDisable()
+	{
+		GameStateController.OnStateChange -= OnGameStateChanged;
+	}
+
+	void OnGameStateChanged(GameStateController.GameState newGameState)
+	{
+		CurrentGameState = newGameState;
+	}
 
 	void OnMouseDown()
 	{
+		if(CurrentGameState == GameStateController.GameState.GameOver)
+		{
+			return;
+		}
+
 		switch(currentState)
 		{
 			case DotStateController.DotStates.Idle:
@@ -36,6 +57,7 @@ public class DotStateController : MonoBehaviour {
 	void LateUpdate()
 	{
 		OnStateCycle();
+		OnGameStateCycle();
 	}
 
 	void OnStateCycle()
@@ -54,6 +76,20 @@ public class DotStateController : MonoBehaviour {
 				break;
 			case DotStates.Locked:
 				break;
+		}
+	}
+
+	void OnGameStateCycle()
+	{
+		if(CurrentGameState == GameStateController.GameState.GameOver)
+		{
+			if(collider2D)
+				collider2D.enabled = false;
+		}
+		else
+		{
+			if(collider2D)
+				collider2D.enabled = true;
 		}
 	}
 

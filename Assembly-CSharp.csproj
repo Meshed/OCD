@@ -47,7 +47,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\DotStateController.cs" />
-     <Compile Include="Assets\Scripts\GameOverButtonManager.cs" />
+     <Compile Include="Assets\Scripts\GameOver_New.cs" />
+     <Compile Include="Assets\Scripts\GameOver_Quit.cs" />
      <Compile Include="Assets\Scripts\GameStateController.cs" />
      <Compile Include="Assets\Scripts\GameStateListener.cs" />
      <Compile Include="Assets\Scripts\GridManager.cs" />
