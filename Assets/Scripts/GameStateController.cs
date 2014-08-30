@@ -49,25 +49,34 @@ public class GameStateController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if(PlayerWon())
+		switch(CurrentGameState)
 		{
-			GameWonContainer.SetActive(true);
-			OnStateChange(GameState.GameOver);
-		}
-		else if(PlayerLost())
-		{
-			GameWonContainer.SetActive(true);
-			OnStateChange(GameState.GameOver);
-		}
-		else
-		{
-			HUDContainer.SetActive(true);
+			case GameState.Playing:
+			if(PlayerWon())
+			{
+				GameWonContainer.SetActive(true);
+				OnStateChange(GameState.GameOver);
+			}
+			else if(PlayerLost())
+			{
+				GameWonContainer.SetActive(true);
+				OnStateChange(GameState.GameOver);
+			}
+			else
+			{
+				HUDContainer.SetActive(true);
+			}
+			break;
+			case GameState.GameOver:
+				break;
+			case GameState.Quit:
+				break;
 		}
 	}
 
 	bool PlayerWon()
 	{
-		return GridManager.GameWon();
+		return GridManager.GridInOrder;
 	}
 
 	bool PlayerLost()

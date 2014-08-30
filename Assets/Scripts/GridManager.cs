@@ -13,6 +13,7 @@ public class GridManager : MonoBehaviour {
 	public GameObject DotHightlight = null;
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
+	public bool GridInOrder = false;
 
 	private int _score = 0;
 
@@ -167,6 +168,7 @@ public class GridManager : MonoBehaviour {
 
 			SelectedDot = null;
 			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
+			GameWon();
 		}
 		else
 		{
@@ -177,17 +179,36 @@ public class GridManager : MonoBehaviour {
 		}
 	
 	}
-	public bool GameWon()
+	public void GameWon()
 	{
-		bool gameWon = false;
+		bool allInOrder = false;
+		bool blueDotsComplete = false;
+		bool greenDotsComplete = false;
+		bool orangeDotsComplete = false;
+		bool purpleDotsComplete = false;
+		bool redDotsComplete = false;
 
-		gameWon = AllDotsForColorInOrder(DotColor.Blue);
-		if(gameWon) gameWon = AllDotsForColorInOrder(DotColor.Green);
-		if(gameWon) gameWon = AllDotsForColorInOrder(DotColor.Orange);
-		if(gameWon) gameWon = AllDotsForColorInOrder(DotColor.Purple);
-		if(gameWon) gameWon = AllDotsForColorInOrder(DotColor.Red);
+		blueDotsComplete = AllDotsForColorInOrder(DotColor.Blue);
+		if(blueDotsComplete) Debug.Log("Blue complete");
+		greenDotsComplete = AllDotsForColorInOrder(DotColor.Green);
+		if(greenDotsComplete) Debug.Log("Green coplete");
+		redDotsComplete = AllDotsForColorInOrder(DotColor.Red);
+		if(redDotsComplete) Debug.Log("Red complete");
+		orangeDotsComplete = AllDotsForColorInOrder(DotColor.Orange);
+		if(orangeDotsComplete) Debug.Log("Orange complete");
+		purpleDotsComplete = AllDotsForColorInOrder(DotColor.Purple);
+		if(purpleDotsComplete) Debug.Log("Purple complete");
 
-		return gameWon;
+		if(blueDotsComplete &&
+		   greenDotsComplete &&
+		   orangeDotsComplete &&
+		   purpleDotsComplete &&
+		   redDotsComplete)
+		{
+			allInOrder = true;
+		}
+
+		GridInOrder = allInOrder;
 	}
 
 	private bool AllDotsForColorInOrder(DotColor dotColor)
@@ -203,32 +224,40 @@ public class GridManager : MonoBehaviour {
 			case DotColor.Green:
 				dotLocationX = 2;
 				break;
-			case DotColor.Orange:
+			case DotColor.Red:
 				dotLocationX = 3;
 				break;
-			case DotColor.Purple:
+			case DotColor.Orange:
 				dotLocationX = 4;
 				break;
-			case DotColor.Red:
+			case DotColor.Purple:
 				dotLocationX = 5;
 				break;
 		}
 
+		// Get all dots
 		var dots = GetAllDots();
-		for (int counter = -2; counter <= 2; counter++) 
+		// Cycle through all the grid dots
+		foreach(GameObject dot in dots)
 		{
-			foreach(GameObject dot in dots)
-			{
-				DotStateController dotStateController = GetDotStateController(dot);
+			// Get the dot's controller
+			DotStateController dotStateController = GetDotStateController(dot);
 
-				if(dotStateController)
+			if(dotStateController)
+			{
+				// Make sure the dot is in the same column as the color we are checking
+				if(dotStateController.GridLocation.x == dotLocationX)
 				{
-					if(dotStateController.GridLocation.x == dotLocationX)
+					// Make sure the color of the dot is the same color we are checking for
+					if(dotStateController.DotColor == dotColor)
 					{
-						if(dotStateController.DotColor == dotColor)
-							allDotsInOrder = true;
-						else
-							allDotsInOrder = false;
+						Debug.Log("DotColor: " + dotStateController.DotColor + ", dotColor: " + dotColor);
+						allDotsInOrder = true;
+					}
+					else
+					{
+						allDotsInOrder = false;
+						break;
 					}
 				}
 			}
