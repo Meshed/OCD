@@ -3,25 +3,32 @@ using System.Collections;
 
 public class ScoreWatcher : MonoBehaviour {
 	public TextMesh scoreMesh = null;
-	public int _score = 0;
+	public int Score = 0;
 
 	// Use this for initialization
 	void Start () {
 		scoreMesh = gameObject.GetComponent<TextMesh>();
-		scoreMesh.text = "Score: " + _score;
+		scoreMesh.text = "Score: " + Score;
 		GridManager.AddScore += AddScore;
 		GridManager.LowerScore += LowerScore;
+		GridManager.ResetScore += ResetScore;
 	}
 
 	void AddScore()
 	{
-		_score++;
-		scoreMesh.text = "Score: " + _score.ToString();
+		Score++;
+		scoreMesh.text = "Score: " + Score.ToString();
 	}
 
 	void LowerScore()
 	{
-		_score--;
-		scoreMesh.text = "Score: " + _score.ToString();
+		Score--;
+		scoreMesh.text = "Score: " + Score.ToString();
+	}
+
+	void ResetScore()
+	{
+		Score = 0;
+		scoreMesh.text = "Score: " + Score.ToString();
 	}
 }

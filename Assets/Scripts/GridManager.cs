@@ -32,13 +32,44 @@ public class GridManager : MonoBehaviour {
 	public delegate void ScoreHandler();
 	public static event ScoreHandler AddScore;
 	public static event ScoreHandler LowerScore;
+	public static event ScoreHandler ResetScore;
 	public delegate void MoveHandler();
 	public static event MoveHandler AddMove;
+	public static event MoveHandler ResetMoves;
+
+	void Start()
+	{
+		SetupTheGame();
+	}
+
+	public void Reset()
+	{
+		DestroyAllDots();
+		SetupTheGame();
+		ResetScoreAndMoves();
+		GridInOrder = false;
+	}
+
+	void DestroyAllDots()
+	{
+		var dots = GetAllDots();
+
+		foreach (var dot in dots) 
+		{
+			Destroy(dot);
+		}
+	}
+
+	void ResetScoreAndMoves()
+	{
+		ResetScore();
+		ResetMoves();
+	}
 	
 	/// <summary>
 	/// This is where we setup the game board, create all of the dots, and assign them to nodes
 	/// </summary>
-	void Start () {
+	void SetupTheGame () {
 	    int blueDotSpawnCount = 0;
 	    int greenDotSpawnCount = 0;
 	    int redDotSpawnCount = 0;

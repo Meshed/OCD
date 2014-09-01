@@ -30,7 +30,6 @@ public class GameStateController : MonoBehaviour {
 	void Start () {
 		CurrentGameState = GameState.Playing;
 		GameObject menu = GameObject.Find("Menu");
-		GameWonContainer.SetActive(false);
 		HUDContainer.SetActive(false);
 
 		if(menu)
@@ -52,21 +51,27 @@ public class GameStateController : MonoBehaviour {
 			case GameState.Playing:
 				if(PlayerWon())
 				{
+					var gameOver = (GameObject) Instantiate(GameWonContainer);
 					GameWonContainer.SetActive(true);
+					HUDContainer.SetActive(false);
 					CurrentGameState = GameState.GameOver;
-					OnStateChange(GameState.GameOver);
-				}
-				else if(PlayerLost())
-				{
-					GameWonContainer.SetActive(true);
 					OnStateChange(GameState.GameOver);
 				}
 				else
 				{
 					HUDContainer.SetActive(true);
+					var gameWonContainer = GameObject.FindGameObjectWithTag("GameWonWindow");
+					if(gameWonContainer)
+					{
+						Destroy(gameWonContainer);
+					}
 				}
 				break;
 			case GameState.GameOver:
+				if(!PlayerWon())
+				{
+					CurrentGameState = GameState.Playing;
+				}
 				break;
 			case GameState.Quit:
 				break;
