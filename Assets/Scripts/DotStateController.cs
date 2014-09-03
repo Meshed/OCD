@@ -41,11 +41,11 @@ public class DotStateController : MonoBehaviour {
 
 		switch(currentState)
 		{
-			case DotStateController.DotStates.Idle:
-				OnStateChange(DotStateController.DotStates.Selected);
+			case DotStates.Idle:
+				OnStateChange(DotStates.Selected);
 				break;
-			case DotStateController.DotStates.Selected:
-				OnStateChange(DotStateController.DotStates.Idle);
+			case DotStates.Selected:
+				OnStateChange(DotStates.Idle);
 				break;
 			case DotStates.Moving:
 				break;

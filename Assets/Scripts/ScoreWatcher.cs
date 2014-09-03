@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Runtime.CompilerServices;
+using UnityEngine;
 
 public class ScoreWatcher : MonoBehaviour {
 	public TextMesh scoreMesh = null;
@@ -9,26 +9,24 @@ public class ScoreWatcher : MonoBehaviour {
 	void Start () {
 		scoreMesh = gameObject.GetComponent<TextMesh>();
 		scoreMesh.text = "Score: " + Score;
-		GridManager.AddScore += AddScore;
-		GridManager.LowerScore += LowerScore;
-		GridManager.ResetScore += ResetScore;
+	    GridManager.AdjustScore += AdjustScore;
+	    GridManager.ResetScore += ResetScore;
 	}
 
-	void AddScore()
+	void AdjustScore(int score)
 	{
-		Score++;
-		scoreMesh.text = "Score: " + Score.ToString();
+        Score += score;
+        UpdateScoreDisplay();
 	}
 
-	void LowerScore()
-	{
-		Score--;
-		scoreMesh.text = "Score: " + Score.ToString();
-	}
+    void ResetScore(int score)
+    {
+        Score = score;
+        UpdateScoreDisplay();
+    }
 
-	void ResetScore()
-	{
-		Score = 0;
-		scoreMesh.text = "Score: " + Score.ToString();
-	}
+    private void UpdateScoreDisplay()
+    {
+        scoreMesh.text = "Score: " + Score;
+    }
 }
