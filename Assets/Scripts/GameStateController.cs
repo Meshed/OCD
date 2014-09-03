@@ -39,7 +39,9 @@ public class GameStateController : MonoBehaviour {
 			if(mainMenuManager)
 			{
 				CurrentGameDifficulty = mainMenuManager.GameDifficulty;
-			}
+            }
+
+            Destroy(menu);
 		}
 	}
 	
