@@ -51,6 +51,14 @@ public class GameStateController : MonoBehaviour {
 		switch(CurrentGameState)
 		{
 			case GameState.Playing:
+		        if (Application.platform == RuntimePlatform.Android)
+		        {
+		            if (Input.GetKey(KeyCode.Escape))
+		            {
+		                Application.LoadLevel("Menu");
+		            }
+		        }
+
 				if(PlayerWon())
 				{
 					var gameOver = (GameObject) Instantiate(GameWonContainer);
