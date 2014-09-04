@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class MenuButtonManager : MonoBehaviour {
 	public GameStateController.GameDifficulty GameDifficulty;
+    public AudioClip MainMenuSelect;
 
 	void OnMouseDown()
 	{
-		MainMenuManager mainMenuManager = transform.parent.GetComponent<MainMenuManager>();
+		var mainMenuManager = transform.parent.GetComponent<MainMenuManager>();
 		mainMenuManager.SetGameDifficulty(GameDifficulty);
+
+	    audio.PlayOneShot(MainMenuSelect);
 
 		Application.LoadLevel("Game");
 	}

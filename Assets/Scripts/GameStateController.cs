@@ -6,6 +6,7 @@ public class GameStateController : MonoBehaviour {
 	public GridManager GridManager;
 	public GameObject GameWonContainer;
 	public GameObject HUDContainer;
+    public AudioClip GameOverAudioClip;
 
 	public delegate void GameStateHandler(GameStateController.GameState newGameState);
 	public static event GameStateHandler OnStateChange;
@@ -61,6 +62,7 @@ public class GameStateController : MonoBehaviour {
 
 				if(PlayerWon())
 				{
+                    audio.PlayOneShot(GameOverAudioClip);
 					var gameOver = (GameObject) Instantiate(GameWonContainer);
 					GameWonContainer.SetActive(true);
 					HUDContainer.SetActive(false);

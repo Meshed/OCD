@@ -13,6 +13,8 @@ public class GridManager : MonoBehaviour {
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
 	public bool GridInOrder = false;
+    public AudioClip ValidMove = null;
+    public AudioClip InvalidMove = null;
 
 	// This is the list of colors we have available for dots
 	public enum DotColor
@@ -103,6 +105,12 @@ public class GridManager : MonoBehaviour {
 			    {
 			        AdjustScore(-1);
 			    }
+
+                audio.PlayOneShot(ValidMove, 1);
+			}
+			else
+			{
+			    audio.PlayOneShot(InvalidMove, 1);
 			}
 
 			SelectedDot = null;
