@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class GridManager : MonoBehaviour {
@@ -14,9 +13,6 @@ public class GridManager : MonoBehaviour {
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
 	public bool GridInOrder = false;
-
-	private int _score = 0;
-
 
 	// This is the list of colors we have available for dots
 	public enum DotColor
@@ -58,6 +54,16 @@ public class GridManager : MonoBehaviour {
                 }
             }
         }
+    }
+
+    void OnEnable()
+    {
+        SwipeDetector.OnDotSwipe += OnDotSwipe;
+    }
+
+    void OnDisable()
+    {
+        SwipeDetector.OnDotSwipe -= OnDotSwipe;
     }
 
 	public void Reset()
@@ -107,7 +113,7 @@ public class GridManager : MonoBehaviour {
 		{
 			SelectedDot = newSelectedDot;
 
-			GameObject dotHightlight = (GameObject)Instantiate(DotHightlight);
+			var dotHightlight = (GameObject)Instantiate(DotHightlight);
 			dotHightlight.transform.position = SelectedDot.transform.position;
 		}
 	
@@ -115,17 +121,12 @@ public class GridManager : MonoBehaviour {
 	public void GameWon()
 	{
 		bool allInOrder = false;
-		bool blueDotsComplete = false;
-		bool greenDotsComplete = false;
-		bool orangeDotsComplete = false;
-		bool purpleDotsComplete = false;
-		bool redDotsComplete = false;
 
-		blueDotsComplete = AllDotsForColorInOrder(DotColor.Blue);
-		greenDotsComplete = AllDotsForColorInOrder(DotColor.Green);
-		redDotsComplete = AllDotsForColorInOrder(DotColor.Red);
-		orangeDotsComplete = AllDotsForColorInOrder(DotColor.Orange);
-		purpleDotsComplete = AllDotsForColorInOrder(DotColor.Purple);
+	    bool blueDotsComplete = AllDotsForColorInOrder(DotColor.Blue);
+		bool greenDotsComplete = AllDotsForColorInOrder(DotColor.Green);
+		bool redDotsComplete = AllDotsForColorInOrder(DotColor.Red);
+		bool orangeDotsComplete = AllDotsForColorInOrder(DotColor.Orange);
+		bool purpleDotsComplete = AllDotsForColorInOrder(DotColor.Purple);
 
 		if(blueDotsComplete &&
 		   greenDotsComplete &&
@@ -147,7 +148,7 @@ public class GridManager : MonoBehaviour {
         if (dotStateController)
         {
             // Get color of current column
-            DotColor dotColumnColor = (DotColor)dotStateController.GridLocation.x;
+            var dotColumnColor = (DotColor)dotStateController.GridLocation.x;
             // Compare current column color with dot color
             if (dotColumnColor == dotStateController.DotColor)
             {
@@ -225,7 +226,7 @@ public class GridManager : MonoBehaviour {
 	/// <param name="gridNode">Grid node.</param>
 	private Vector2 GetGridLocation(int gridNode)
 	{
-		Vector2 gridLocation = new Vector2()
+		var gridLocation = new Vector2()
 		{
 			x = 0, 
 			y = 0
@@ -287,18 +288,18 @@ public class GridManager : MonoBehaviour {
 	{
 		return GameObject.FindGameObjectsWithTag("Dot");
 	}
-	/// <summary>
-	/// Determines if the dot selection is allowed. There are different rules for each difficulty level.
-	/// 	Normal: Any dot is allowed to be selected if there is no dot selected. Only a dot next to the 
-	/// 		already selected dot is allowed.
-	/// 	Difficult: A dot may not be selected from a locked column
-	/// 	Hard: A dot may not be selected from a locked column or row
-	/// </summary>
-	/// <returns><c>true</c> if this instance is dot selection allowed the specified selectedDot; otherwise, <c>false</c>.</returns>
-	/// <param name="selectedDot">Selected dot.</param>
-	private bool IsDotSelectionAllowed(GameObject dot)
+
+    /// <summary>
+    /// Determines if the dot selection is allowed. There are different rules for each difficulty level.
+    /// 	Normal: Any dot is allowed to be selected if there is no dot selected. Only a dot next to the 
+    /// 		already selected dot is allowed.
+    /// 	Difficult: A dot may not be selected from a locked column
+    /// 	Hard: A dot may not be selected from a locked column or row
+    /// </summary>
+    /// <returns><c>true</c> if this instance is dot selection allowed the specified selectedDot; otherwise, <c>false</c>.</returns>
+    private bool IsDotSelectionAllowed(GameObject dot)
 	{
-		bool isSelectionAllowed = false;
+		bool isSelectionAllowed;
 
 		// TODO: Implement a strategy to support various levels of business rules, one for each difficulty
 		if(SelectedDot == null)
@@ -482,5 +483,144 @@ public class GridManager : MonoBehaviour {
     {
         ResetScore(0);
         ResetMoves();
+    }
+
+    void OnDotSwipe(SwipeDetector.SwipeDirection swipeDirection)
+    {
+        GameObject newDot = null;
+
+        switch (swipeDirection)
+        {
+            case SwipeDetector.SwipeDirection.Up:
+                newDot = GetDotUpFromSelectedDot();
+                break;
+            case SwipeDetector.SwipeDirection.Down:
+                newDot = GetDotDownFromSelectedDot();
+                break;
+            case SwipeDetector.SwipeDirection.Left:
+                newDot = GetDotLeftOfSelectedDot();
+                break;
+            case SwipeDetector.SwipeDirection.Right:
+                newDot = GetDotRightOfSelectedDot();
+                break;
+        }
+
+        if (newDot)
+        {
+            DotSelected(newDot);
+        }
+    }
+
+    GameObject GetDotUpFromSelectedDot()
+    {
+        if (!SelectedDot)
+        {
+            return null;
+        }
+        DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
+
+        var selectedGridLocationX = (int)selectedDotStateController.GridLocation.x;
+        var selectedGridLocationY = (int)selectedDotStateController.GridLocation.y;
+
+        var dots = GetAllDots();
+
+        foreach (var dot in dots)
+        {
+            DotStateController newDotStateController = GetDotStateController(dot);
+            var newGridLocationX = (int) newDotStateController.GridLocation.x;
+            var newGridLocationY = (int) newDotStateController.GridLocation.y;
+
+            if (newGridLocationX == selectedGridLocationX &&
+                newGridLocationY == selectedGridLocationY - 1)
+            {
+                return dot;
+            }
+        }
+
+        return null;
+    }
+    GameObject GetDotDownFromSelectedDot()
+    {
+        if (!SelectedDot)
+        {
+            return null;
+        }
+        DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
+
+        var selectedGridLocationX = (int)selectedDotStateController.GridLocation.x;
+        var selectedGridLocationY = (int)selectedDotStateController.GridLocation.y;
+
+        var dots = GetAllDots();
+
+        foreach (var dot in dots)
+        {
+            DotStateController newDotStateController = GetDotStateController(dot);
+            var newGridLocationX = (int)newDotStateController.GridLocation.x;
+            var newGridLocationY = (int)newDotStateController.GridLocation.y;
+
+            if (newGridLocationX == selectedGridLocationX &&
+                newGridLocationY == selectedGridLocationY + 1)
+            {
+                return dot;
+            }
+        }
+
+        return null;
+    }
+    GameObject GetDotLeftOfSelectedDot()
+    {
+        if (!SelectedDot)
+        {
+            return null;
+        }
+        DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
+
+        var selectedGridLocationX = (int)selectedDotStateController.GridLocation.x;
+        var selectedGridLocationY = (int)selectedDotStateController.GridLocation.y;
+
+        var dots = GetAllDots();
+
+        foreach (var dot in dots)
+        {
+            DotStateController newDotStateController = GetDotStateController(dot);
+            var newGridLocationX = (int)newDotStateController.GridLocation.x;
+            var newGridLocationY = (int)newDotStateController.GridLocation.y;
+
+            if (newGridLocationX == selectedGridLocationX - 1 &&
+                newGridLocationY == selectedGridLocationY)
+            {
+                return dot;
+            }
+        }
+
+        return null;
+    }
+    GameObject GetDotRightOfSelectedDot()
+    {
+        if (!SelectedDot)
+        {
+            return null;
+        }
+        DotStateController selectedDotStateController = GetDotStateController(SelectedDot);
+
+        var selectedGridLocationX = (int)selectedDotStateController.GridLocation.x;
+        var selectedGridLocationY = (int)selectedDotStateController.GridLocation.y;
+
+        var dots = GetAllDots();
+
+        foreach (var dot in dots)
+        {
+            DotStateController newDotStateController = GetDotStateController(dot);
+            var newGridLocationX = (int)newDotStateController.GridLocation.x;
+            var newGridLocationY = (int)newDotStateController.GridLocation.y;
+
+            if (newGridLocationX == selectedGridLocationX + 1 &&
+                newGridLocationY == selectedGridLocationY)
+            {
+                return dot;
+            }
+        }
+
+        return null;
     }
 }
