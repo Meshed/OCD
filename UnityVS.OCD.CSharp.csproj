@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CollideOnGameOverGameState.cs" />
     <Compile Include="Assets\Scripts\CollideOnPlayingGameState.cs" />
+    <Compile Include="Assets\Scripts\DotService.cs" />
     <Compile Include="Assets\Scripts\DotStateController.cs" />
     <Compile Include="Assets\Scripts\GameOver_New.cs" />
     <Compile Include="Assets\Scripts\GameOver_Quit.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Assets\Scripts\GridManager.cs" />
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MenuButtonManager.cs" />
+    <Compile Include="Assets\Scripts\MoveValidationManager.cs" />
     <Compile Include="Assets\Scripts\MoveWatcher.cs" />
     <Compile Include="Assets\Scripts\ScoreWatcher.cs" />
     <Compile Include="Assets\Scripts\SwipeDetector.cs" />
