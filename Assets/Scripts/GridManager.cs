@@ -226,6 +226,26 @@ public class GridManager : MonoBehaviour {
         GridInOrder = allInOrder;
     }
 
+	private void LockDots(GameObject dot)
+	{
+		DotStateController dotStateController = _dotService.GetDotStateController(dot);
+
+		switch(GameStateController.CurrentGameDifficulty)
+		{
+			case GameStateController.GameDifficulty.Easy:
+				if(AllDotsForColorInOrder(dotStateController.DotColor))
+				{
+					LockColumn(dot);
+				}
+				break;
+			case GameStateController.GameDifficulty.Normal:
+				break;
+			case GameStateController.GameDifficulty.Hard:
+				break;
+			case GameStateController.GameDifficulty.IceCream:
+				break;
+		}
+	}
     /// <summary>
     /// Gets the random color of the dot from the DotColor list
     /// </summary>
@@ -384,11 +404,22 @@ public class GridManager : MonoBehaviour {
 
     private void LockColumn(GameObject dot)
     {
-        
+        List<GameObject> columnDots = _dotService.GetColumnForDot(dot);
+
+		foreach (var columnDot in columnDots) 
+		{
+			_dotService.GetDotStateController(columnDot).IsLocked = true;
+		}
     }
 
     private void LockRow(GameObject dot)
     {
+		List<GameObject> rowDows = _dotService.GetRowForDot(dot);
+
+		foreach (var rowDot in rowDows) 
+		{
+			_dotService.GetDotStateController(rowDot).IsLocked = true;
+		}
         
     }
 

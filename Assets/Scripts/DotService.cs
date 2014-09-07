@@ -157,4 +157,49 @@ public class DotService
 
         return null;
     }
+	public List<GameObject> GetColumnForDot(GameObject selectedDot)
+	{
+		List<GameObject> dotsInColumn = new List<GameObject>();
+		IEnumerable<GameObject> dots = GetAllDots();
+		int selectedDotY = (int)GetDotStateController(selectedDot).GridLocation.y;
+
+		foreach (var dot in dots) 
+		{
+			DotStateController dotStateController = GetDotStateController(dot);
+
+			if(dotStateController)
+			{
+				int dotY = (int)dotStateController.GridLocation.y;
+				if(dotY == selectedDotY)
+				{
+					dotsInColumn.Add(dot);
+				}
+			}
+		}
+
+		return dotsInColumn;
+	}
+
+	public List<GameObject> GetRowForDot(GameObject selectedDot)
+	{
+		List<GameObject> dotsInRow = new List<GameObject>();
+		IEnumerable<GameObject> dots = GetAllDots();
+		int selectedDotX = (int)GetDotStateController(selectedDot).GridLocation.x;
+
+		foreach(var dot in dots)
+		{
+			DotStateController dotStateController = GetDotStateController(dot);
+
+			if(dotStateController)
+			{
+				int dotX = (int)dotStateController.GridLocation.x;
+				if(dotX == selectedDotX)
+				{
+					dotsInRow.Add(dot);
+				}
+			}
+		}
+
+		return dotsInRow;
+	}
 }
