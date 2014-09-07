@@ -10,12 +10,14 @@ public class DotStateController : MonoBehaviour {
 		Locked
 	}
 
-	public DotStates currentState = DotStates.Idle;
+	public DotStates CurrentState = DotStates.Idle;
 	public GameObject GridNode = null;
 	public GridManager GridManager = null;
 	public Vector2 GridLocation;
 	public GridManager.DotColor DotColor;
 	public GameStateController.GameState CurrentGameState;
+
+    public bool IsLocked { get; set; }
 
 	void OnEnable()
 	{
@@ -27,11 +29,6 @@ public class DotStateController : MonoBehaviour {
 		GameStateController.OnStateChange -= OnGameStateChanged;
 	}
 
-	void OnGameStateChanged(GameStateController.GameState newGameState)
-	{
-		CurrentGameState = newGameState;
-	}
-
 	void OnMouseDown()
 	{
 		if(CurrentGameState == GameStateController.GameState.GameOver)
@@ -39,7 +36,7 @@ public class DotStateController : MonoBehaviour {
 			return;
 		}
 
-		switch(currentState)
+		switch(CurrentState)
 		{
 			case DotStates.Idle:
 				OnStateChange(DotStates.Selected);
@@ -60,9 +57,26 @@ public class DotStateController : MonoBehaviour {
 		OnGameStateCycle();
 	}
 
-	void OnStateCycle()
+    void OnGameStateChanged(GameStateController.GameState newGameState)
+    {
+        CurrentGameState = newGameState;
+    }
+    void OnGameStateCycle()
+    {
+        if (CurrentGameState == GameStateController.GameState.GameOver)
+        {
+            if (collider2D)
+                collider2D.enabled = false;
+        }
+        else
+        {
+            if (collider2D)
+                collider2D.enabled = true;
+        }
+    }
+    void OnStateCycle()
 	{
-		switch (currentState) 
+		switch (CurrentState) 
 		{
 			case DotStates.Idle:
 				if(GridNode)
@@ -79,23 +93,9 @@ public class DotStateController : MonoBehaviour {
 		}
 	}
 
-	void OnGameStateCycle()
-	{
-		if(CurrentGameState == GameStateController.GameState.GameOver)
-		{
-			if(collider2D)
-				collider2D.enabled = false;
-		}
-		else
-		{
-			if(collider2D)
-				collider2D.enabled = true;
-		}
-	}
-
 	public void OnStateChange(DotStateController.DotStates newState)
 	{
-		if(newState == currentState)
+		if(newState == CurrentState)
 			return;
 		
 		switch(newState)
@@ -111,6 +111,6 @@ public class DotStateController : MonoBehaviour {
 				break;
 		}
 		
-		currentState = newState;
+		CurrentState = newState;
 	}
 }

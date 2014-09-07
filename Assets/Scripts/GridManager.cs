@@ -58,87 +58,6 @@ public class GridManager : MonoBehaviour {
         SwipeDetector.OnDotSwipe -= OnDotSwipe;
     }
 
-	public void Reset()
-	{
-		DestroyAllDots();
-		SetupTheGame();
-		ResetScoreAndMoves();
-		GridInOrder = false;
-	}
-	/// <summary>
-	/// Handles when a dot has been selected and handles the validation
-	/// </summary>
-	/// <param name="newSelectedDot">New selected dot.</param>
-	public void DotSelected(GameObject newSelectedDot)
-	{
-		if(SelectedDot)
-		{
-            MoveValidationManager moveValidationManager = new MoveValidationManager(SelectedDot, GameStateController.CurrentGameDifficulty);
-
-			if(moveValidationManager.IsDotSelectionAllowed(newSelectedDot))
-			{
-				AddMove();
-				DotStateController selectedDotStateController = _dotService.GetDotStateController(SelectedDot);
-				DotStateController newDotStateController = _dotService.GetDotStateController(newSelectedDot);
-				
-				GameObject tempGridNode = selectedDotStateController.GridNode;
-				selectedDotStateController.GridNode = newDotStateController.GridNode;
-				newDotStateController.GridNode = tempGridNode;
-
-				Vector2 tempGridLocation = selectedDotStateController.GridLocation;
-				selectedDotStateController.GridLocation = newDotStateController.GridLocation;
-				newDotStateController.GridLocation = tempGridLocation;
-
-			    if (DotIsInHomeColumn(newSelectedDot) || DotIsInHomeColumn(SelectedDot))
-			    {
-			        AdjustScore(5);
-			    }
-			    else
-			    {
-			        AdjustScore(-1);
-			    }
-
-                audio.PlayOneShot(ValidMove, 1);
-			}
-			else
-			{
-			    audio.PlayOneShot(InvalidMove, 1);
-			}
-
-			SelectedDot = null;
-			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
-			GameWon();
-		}
-		else
-		{
-			SelectedDot = newSelectedDot;
-
-			var dotHightlight = (GameObject)Instantiate(DotHightlight);
-			dotHightlight.transform.position = SelectedDot.transform.position;
-		}
-	
-	}
-    public void GameWon()
-    {
-        bool allInOrder = false;
-
-        bool blueDotsComplete = AllDotsForColorInOrder(DotColor.Blue);
-        bool greenDotsComplete = AllDotsForColorInOrder(DotColor.Green);
-        bool redDotsComplete = AllDotsForColorInOrder(DotColor.Red);
-        bool orangeDotsComplete = AllDotsForColorInOrder(DotColor.Orange);
-        bool purpleDotsComplete = AllDotsForColorInOrder(DotColor.Purple);
-
-        if (blueDotsComplete &&
-           greenDotsComplete &&
-           orangeDotsComplete &&
-           purpleDotsComplete &&
-           redDotsComplete)
-        {
-            allInOrder = true;
-        }
-
-        GridInOrder = allInOrder;
-    }
     /// <summary>
     /// This is where we setup the game board, create all of the dots, and assign them to nodes
     /// </summary>
@@ -225,6 +144,87 @@ public class GridManager : MonoBehaviour {
             } while (!dotCreated);
         }
     }
+    public void Reset()
+	{
+		DestroyAllDots();
+		SetupTheGame();
+		ResetScoreAndMoves();
+		GridInOrder = false;
+	}
+	/// <summary>
+	/// Handles when a dot has been selected and handles the validation
+	/// </summary>
+	/// <param name="newSelectedDot">New selected dot.</param>
+	public void DotSelected(GameObject newSelectedDot)
+	{
+		if(SelectedDot)
+		{
+            MoveValidationManager moveValidationManager = new MoveValidationManager(SelectedDot, GameStateController.CurrentGameDifficulty);
+
+			if(moveValidationManager.IsDotSelectionAllowed(newSelectedDot))
+			{
+				AddMove();
+				DotStateController selectedDotStateController = _dotService.GetDotStateController(SelectedDot);
+				DotStateController newDotStateController = _dotService.GetDotStateController(newSelectedDot);
+				
+				GameObject tempGridNode = selectedDotStateController.GridNode;
+				selectedDotStateController.GridNode = newDotStateController.GridNode;
+				newDotStateController.GridNode = tempGridNode;
+
+				Vector2 tempGridLocation = selectedDotStateController.GridLocation;
+				selectedDotStateController.GridLocation = newDotStateController.GridLocation;
+				newDotStateController.GridLocation = tempGridLocation;
+
+			    if (DotIsInHomeColumn(newSelectedDot) || DotIsInHomeColumn(SelectedDot))
+			    {
+			        AdjustScore(5);
+			    }
+			    else
+			    {
+			        AdjustScore(-1);
+			    }
+
+                audio.PlayOneShot(ValidMove, 1);
+			}
+			else
+			{
+			    audio.PlayOneShot(InvalidMove, 1);
+			}
+
+			SelectedDot = null;
+			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
+			GameWon();
+		}
+		else
+		{
+			SelectedDot = newSelectedDot;
+
+			var dotHightlight = (GameObject)Instantiate(DotHightlight);
+			dotHightlight.transform.position = SelectedDot.transform.position;
+		}
+	
+	}
+    public void GameWon()
+    {
+        bool allInOrder = false;
+
+        bool blueDotsComplete = AllDotsForColorInOrder(DotColor.Blue);
+        bool greenDotsComplete = AllDotsForColorInOrder(DotColor.Green);
+        bool redDotsComplete = AllDotsForColorInOrder(DotColor.Red);
+        bool orangeDotsComplete = AllDotsForColorInOrder(DotColor.Orange);
+        bool purpleDotsComplete = AllDotsForColorInOrder(DotColor.Purple);
+
+        if (blueDotsComplete &&
+           greenDotsComplete &&
+           orangeDotsComplete &&
+           purpleDotsComplete &&
+           redDotsComplete)
+        {
+            allInOrder = true;
+        }
+
+        GridInOrder = allInOrder;
+    }
 
     /// <summary>
     /// Gets the random color of the dot from the DotColor list
@@ -242,6 +242,7 @@ public class GridManager : MonoBehaviour {
         dotStateController.GridLocation = GetGridLocation(gridNodeIndex);
         dotStateController.GridNode = GridNodes[gridNodeIndex];
         dotStateController.GridManager = this;
+        dotStateController.IsLocked = false;
         dotStateController.OnStateChange(DotStateController.DotStates.Idle);
     }
     /// <summary>
@@ -379,6 +380,21 @@ public class GridManager : MonoBehaviour {
         {
             Destroy(dot);
         }
+    }
+
+    private void LockColumn(GameObject dot)
+    {
+        
+    }
+
+    private void LockRow(GameObject dot)
+    {
+        
+    }
+
+    private void LockDiagonal()
+    {
+        
     }
 
     void OnDotSwipe(SwipeDetector.SwipeDirection swipeDirection)
