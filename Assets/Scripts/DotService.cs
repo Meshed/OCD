@@ -161,7 +161,7 @@ public class DotService
 	{
 		List<GameObject> dotsInColumn = new List<GameObject>();
 		IEnumerable<GameObject> dots = GetAllDots();
-		int selectedDotY = (int)GetDotStateController(selectedDot).GridLocation.y;
+		int selectedDotX = (int)GetDotStateController(selectedDot).GridLocation.x;
 
 		foreach (var dot in dots) 
 		{
@@ -169,8 +169,8 @@ public class DotService
 
 			if(dotStateController)
 			{
-				int dotY = (int)dotStateController.GridLocation.y;
-				if(dotY == selectedDotY)
+				int dotX = (int)dotStateController.GridLocation.x;
+				if(dotX == selectedDotX)
 				{
 					dotsInColumn.Add(dot);
 				}

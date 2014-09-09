@@ -161,7 +161,7 @@ public class GridManager : MonoBehaviour {
 		{
             MoveValidationManager moveValidationManager = new MoveValidationManager(SelectedDot, GameStateController.CurrentGameDifficulty);
 
-			if(moveValidationManager.IsDotSelectionAllowed(newSelectedDot))
+			if(moveValidationManager.IsDotSelectionAllowed(newSelectedDot,ref SelectedDot))
 			{
 				AddMove();
 				DotStateController selectedDotStateController = _dotService.GetDotStateController(SelectedDot);
@@ -191,7 +191,8 @@ public class GridManager : MonoBehaviour {
 			    audio.PlayOneShot(InvalidMove, 1);
 			}
 
-			SelectedDot = null;
+            LockDots(newSelectedDot);
+            SelectedDot = null;
 			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
 			GameWon();
 		}
@@ -228,17 +229,13 @@ public class GridManager : MonoBehaviour {
 
 	private void LockDots(GameObject dot)
 	{
-		DotStateController dotStateController = _dotService.GetDotStateController(dot);
 
 		switch(GameStateController.CurrentGameDifficulty)
 		{
 			case GameStateController.GameDifficulty.Easy:
-				if(AllDotsForColorInOrder(dotStateController.DotColor))
-				{
-					LockColumn(dot);
-				}
 				break;
 			case GameStateController.GameDifficulty.Normal:
+                LockDotsForNormalDifficulty(dot);
 				break;
 			case GameStateController.GameDifficulty.Hard:
 				break;
@@ -246,6 +243,29 @@ public class GridManager : MonoBehaviour {
 				break;
 		}
 	}
+
+    private void LockDotsForNormalDifficulty(GameObject newDot)
+    {
+        DotStateController newDotStateController = _dotService.GetDotStateController(newDot);
+        DotStateController selectedDotStateController = _dotService.GetDotStateController(SelectedDot);
+
+        bool newDotColorInOrder = AllDotsForColorInOrder(newDotStateController.DotColor);
+        bool selectedDotColorInOrder = AllDotsForColorInOrder(selectedDotStateController.DotColor);
+
+        if (newDotColorInOrder || selectedDotColorInOrder)
+        {
+            if (newDotColorInOrder)
+            {
+                LockColumn(newDot);
+            }
+            else if (selectedDotColorInOrder)
+            {
+                LockColumn(SelectedDot);
+            }
+
+            LockColumn(newDotColorInOrder ? newDot : SelectedDot);
+        }
+    }
     /// <summary>
     /// Gets the random color of the dot from the DotColor list
     /// </summary>

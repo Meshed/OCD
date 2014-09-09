@@ -25,7 +25,7 @@ public class MoveValidationManager
     /// 	Hard: A dot may not be selected from a locked column or row
     /// </summary>
     /// <returns><c>true</c> if this instance is dot selection allowed the specified selectedDot; otherwise, <c>false</c>.</returns>
-    public bool IsDotSelectionAllowed(GameObject dot)
+    public bool IsDotSelectionAllowed(GameObject dot, ref GameObject selectedDot)
     {
         bool isSelectionAllowed = false;
 
@@ -33,8 +33,12 @@ public class MoveValidationManager
             isSelectionAllowed = true;
         else
         {
+            bool dotLocked = _dotService.GetDotStateController(dot).IsLocked;
+            bool selectedDotLocked = _dotService.GetDotStateController(selectedDot).IsLocked;
+
             if (!IsNewDotLeftRightUpDownFromCurrentDot(dot) ||
-			    _dotService.GetDotStateController(dot).IsLocked)
+			    dotLocked ||
+                selectedDotLocked)
                 isSelectionAllowed = false;
 			else
 				isSelectionAllowed = true;
