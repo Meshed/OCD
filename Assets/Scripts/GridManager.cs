@@ -238,6 +238,7 @@ public class GridManager : MonoBehaviour {
                 LockDotsForNormalDifficulty(dot);
 				break;
 			case GameStateController.GameDifficulty.Hard:
+                LockDotsForHardDifficulty(dot);
 				break;
 			case GameStateController.GameDifficulty.IceCream:
 				break;
@@ -254,16 +255,19 @@ public class GridManager : MonoBehaviour {
 
         if (newDotColorInOrder || selectedDotColorInOrder)
         {
-            if (newDotColorInOrder)
-            {
-                LockColumn(newDot);
-            }
-            else if (selectedDotColorInOrder)
-            {
-                LockColumn(SelectedDot);
-            }
-
             LockColumn(newDotColorInOrder ? newDot : SelectedDot);
+        }
+    }
+    private void LockDotsForHardDifficulty(GameObject newDot)
+    {
+        LockDotsForNormalDifficulty(newDot);
+
+        bool newDotRowInOrder = AllDotsForRowInOrder(newDot);
+        bool selectedDotColorInOrder = AllDotsForRowInOrder(SelectedDot);
+
+        if (newDotRowInOrder || selectedDotColorInOrder)
+        {
+            LockRow(newDotRowInOrder ? newDot : SelectedDot);
         }
     }
     /// <summary>
@@ -407,6 +411,41 @@ public class GridManager : MonoBehaviour {
 
 		return allDotsInOrder;
 	}
+    private bool AllDotsForRowInOrder(GameObject dot)
+    {
+        IEnumerable<GameObject> dots = _dotService.GetRowForDot(dot);
+        bool allDotsInOrder = false;
+
+        foreach (var rowDot in dots)
+        {
+            DotStateController rowDotStateController = _dotService.GetDotStateController(rowDot);
+
+            var rowDotX = (int) rowDotStateController.GridLocation.x;
+            switch (rowDotStateController.DotColor)
+            {
+                case DotColor.Blue:
+                    allDotsInOrder = rowDotX == 1;
+                    break;
+                case DotColor.Green:
+                    allDotsInOrder = rowDotX == 2;
+                    break;
+                case DotColor.Red:
+                    allDotsInOrder = rowDotX == 3;
+                    break;
+                case DotColor.Orange:
+                    allDotsInOrder = rowDotX == 4;
+                    break;
+                case DotColor.Purple:
+                    allDotsInOrder = rowDotX == 5;
+                    break;
+            }
+
+            if (!allDotsInOrder)
+                break;
+        }
+
+        return allDotsInOrder;
+    }
     private void ResetScoreAndMoves()
     {
         ResetScore(0);
@@ -431,7 +470,6 @@ public class GridManager : MonoBehaviour {
 			_dotService.GetDotStateController(columnDot).IsLocked = true;
 		}
     }
-
     private void LockRow(GameObject dot)
     {
 		List<GameObject> rowDows = _dotService.GetRowForDot(dot);
