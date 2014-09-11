@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class DotService
@@ -203,4 +204,46 @@ public class DotService
 
 		return dotsInRow;
 	}
+
+    public List<GameObject> GetDiagonalDotsTopDown(GameObject selectedDot)
+    {
+        List<GameObject> dotList = new List<GameObject>();
+        DotStateController selectedDotStateController = GetDotStateController(selectedDot);
+
+        if (DotNotTooCloseToEdgeForDiagonalTopDown(selectedDotStateController))
+        {
+            IEnumerable<GameObject> dots = GetAllDots();
+            int selectedDotX = (int)selectedDotStateController.GridLocation.x;
+            int selectedDotY = (int)selectedDotStateController.GridLocation.y;
+
+            foreach (var dot in dots)
+            {
+                DotStateController dotStateController = GetDotStateController(dot);
+            }
+        }
+
+        return dotList;
+    }
+
+    private bool DotNotTooCloseToEdgeForDiagonalTopDown(DotStateController dotStateController)
+    {
+        bool validDot = false;
+
+        var selectedDotX = (int)dotStateController.GridLocation.x;
+        var selectedDotY = (int)dotStateController.GridLocation.y;
+
+        if ((selectedDotX + selectedDotY) + ((5 - selectedDotX)*2) == 12 ||
+            (selectedDotX + selectedDotY) + ((5 - selectedDotX)*2) == 11 ||
+            (selectedDotX + selectedDotY) + ((5 - selectedDotX)*2) == 10)
+        {
+            validDot = true;
+        }
+
+        if (selectedDotY < selectedDotX)
+        {
+            validDot = false;
+        }
+
+        return validDot;
+    }
 }
