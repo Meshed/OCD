@@ -10,6 +10,7 @@ public class GridManager : MonoBehaviour {
 	public GameObject OrangeDot = null;
 	public GameObject PurpleDot = null;
 	public GameObject DotHightlight = null;
+	public GameObject ValidMoveHighlight = null;
 	public int MaxDotsPerColor = 1;
 	public GameObject SelectedDot = null;
 	public bool GridInOrder = false;
@@ -193,7 +194,7 @@ public class GridManager : MonoBehaviour {
 
             LockDots(newSelectedDot);
             SelectedDot = null;
-			Destroy(GameObject.FindGameObjectWithTag("DotHightlight"));
+			RemoveDotHighlights();
 			GameWon();
 		}
 		else
@@ -202,9 +203,57 @@ public class GridManager : MonoBehaviour {
 
 			var dotHightlight = (GameObject)Instantiate(DotHightlight);
 			dotHightlight.transform.position = SelectedDot.transform.position;
+
+			ShowValidMoves();
 		}
 	
 	}
+
+	private void RemoveDotHighlights()
+	{
+		var hightlights = GameObject.FindGameObjectsWithTag("DotHightlight");
+
+		foreach (var highlight in hightlights) 
+		{
+			Destroy(highlight);
+		}
+	}
+
+	private void ShowValidMoves()
+	{
+		var dotAboveSelected = _dotService.GetDotUpFromSelectedDot(SelectedDot);
+
+		if(dotAboveSelected)
+		{
+			var aboveValidMove = (GameObject)Instantiate(ValidMoveHighlight);
+			aboveValidMove.transform.position = dotAboveSelected.transform.position;
+		}
+
+		var dotRightOfSelected = _dotService.GetDotRightOfSelectedDot(SelectedDot);
+
+		if(dotRightOfSelected)
+		{
+			var rightValidMove = (GameObject)Instantiate(ValidMoveHighlight);
+			rightValidMove.transform.position = dotRightOfSelected.transform.position;
+		}
+
+		var dotBelowSelected = _dotService.GetDotDownFromSelectedDot(SelectedDot);
+
+		if(dotBelowSelected)
+		{
+			var belowValidMove = (GameObject)Instantiate(ValidMoveHighlight);
+			belowValidMove.transform.position = dotBelowSelected.transform.position;
+		}
+
+		var dotLeftOfSelected = _dotService.GetDotLeftOfSelectedDot(SelectedDot);
+
+		if(dotLeftOfSelected)
+		{
+			var leftValidMove = (GameObject)Instantiate(ValidMoveHighlight);
+			leftValidMove.transform.position = dotLeftOfSelected.transform.position;
+		}
+	}
+
     public void GameWon()
     {
         bool allInOrder = false;
