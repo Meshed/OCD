@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 9f5890f9a12f8460c976333bba67c2f2
+guid: 0e032cdfa4e2a4cae8d360e523552887
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: Hightlight
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
