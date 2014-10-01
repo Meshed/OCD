@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CollideOnGameOverGameState.cs" />
     <Compile Include="Assets\Scripts\CollideOnPlayingGameState.cs" />
+    <Compile Include="Assets\Scripts\Credits.cs" />
     <Compile Include="Assets\Scripts\DotService.cs" />
     <Compile Include="Assets\Scripts\DotStateController.cs" />
     <Compile Include="Assets\Scripts\GameOver_New.cs" />
