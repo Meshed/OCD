@@ -6,7 +6,10 @@ public class MainMenuManager : MonoBehaviour {
 
 	void Awake () {
 		DontDestroyOnLoad(this);
+		FB.Init(null, null, null);
 	}
+
+	public delegate void SetInit();
 
 	public void SetGameDifficulty(GameStateController.GameDifficulty gameDifficulty)
 	{
