@@ -51,6 +51,14 @@ public class DotStateController : MonoBehaviour {
 		}
 	}
 
+	void Update()
+	{
+		if(IsLocked)
+		{
+			GetComponent<SpriteRenderer>().color = Color.black;
+		}
+	}
+
 	void LateUpdate()
 	{
 		OnStateCycle();
