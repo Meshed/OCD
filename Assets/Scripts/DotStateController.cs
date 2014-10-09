@@ -42,6 +42,7 @@ public class DotStateController : MonoBehaviour {
 				OnStateChange(DotStates.Selected);
 				break;
 			case DotStates.Selected:
+				GridManager.DotSelected(gameObject);
 				OnStateChange(DotStates.Idle);
 				break;
 			case DotStates.Moving:
