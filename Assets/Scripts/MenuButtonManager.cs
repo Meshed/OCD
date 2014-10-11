@@ -11,10 +11,14 @@ public class MenuButtonManager : MonoBehaviour {
 			case "MainMenu_Credits":
 				HandleCreditClick();
 				break;
+			case "MainMenu_Instructions":
+				HandleInstructionsClick();
+				break;
 			case "MainMenu_Exit":
 				Application.Quit();
 				break;
 			case "Credits_Back":
+			case "Instructions_Back":
 				HandleBackClick();
 				break;
 			default:
@@ -37,6 +41,12 @@ public class MenuButtonManager : MonoBehaviour {
 	{
 		audio.PlayOneShot(MainMenuSelect);
 		Application.LoadLevel("Credits");
+	}
+
+	private void HandleInstructionsClick()
+	{
+		audio.PlayOneShot(MainMenuSelect);
+		Application.LoadLevel("Instructions");
 	}
 
 	private void HandleBackClick()

@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\GameStateController.cs" />
     <Compile Include="Assets\Scripts\GameStateListener.cs" />
     <Compile Include="Assets\Scripts\GridManager.cs" />
+    <Compile Include="Assets\Scripts\Instrunctions.cs" />
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MenuButtonManager.cs" />
     <Compile Include="Assets\Scripts\MoveValidationManager.cs" />

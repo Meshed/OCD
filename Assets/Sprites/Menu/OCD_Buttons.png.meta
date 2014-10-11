@@ -7,7 +7,7 @@ TextureImporter:
     21300004: Button_Hard
     21300006: Button_Credits
     21300008: Button_Back
-    21300010: Button_Exit
+    21300010: Button_HowToPlay
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -99,7 +99,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Button_Exit
+    - name: Button_HowToPlay
       rect:
         serializedVersion: 2
         x: 8
