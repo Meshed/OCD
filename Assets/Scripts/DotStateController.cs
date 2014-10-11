@@ -42,12 +42,21 @@ public class DotStateController : MonoBehaviour {
 				OnStateChange(DotStates.Selected);
 				break;
 			case DotStates.Selected:
+				GridManager.DotSelected(gameObject);
 				OnStateChange(DotStates.Idle);
 				break;
 			case DotStates.Moving:
 				break;
 			case DotStates.Locked:
 				break;
+		}
+	}
+
+	void Update()
+	{
+		if(IsLocked)
+		{
+			GetComponent<SpriteRenderer>().color = Color.black;
 		}
 	}
 
