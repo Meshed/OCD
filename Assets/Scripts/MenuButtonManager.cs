@@ -19,6 +19,7 @@ public class MenuButtonManager : MonoBehaviour {
 				break;
 			case "Credits_Back":
 			case "Instructions_Back":
+			case "Game_Back":
 				HandleBackClick();
 				break;
 			default:
